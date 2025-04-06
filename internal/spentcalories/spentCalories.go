@@ -39,6 +39,7 @@ func parseTraining(data string) (int, string, time.Duration, error) {
 
 }
 
+
 // distance возвращает дистанцию(в километрах), которую преодолел пользователь за время тренировки.
 //
 // Параметры:
