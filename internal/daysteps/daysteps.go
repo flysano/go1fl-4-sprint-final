@@ -2,20 +2,17 @@ package daysteps
 
 import (
 	"fmt"
-	"go1fl-4-sprint-final/internal/spentcalories"
 	"strconv"
 	"strings"
 	"time"
-)
 
-var (
-	StepLength = 0.65 // длина шага в метрах
+	"go1fl-4-sprint-final/internal/spentcalories"
 )
 
 func parsePackage(data string) (int, time.Duration, error) {
 	dataSlice := strings.Split(data, ",")
 	if len(dataSlice) < 2 {
-		return 0, 0, fmt.Errorf("Неверный формат ввода данных: %s", data)
+		return 0, 0, fmt.Errorf("invalid input format: expected 2 values, got %d: %s", len(dataSlice), data)
 	}
 
 	steps, err := strconv.Atoi(dataSlice[0])
@@ -23,7 +20,7 @@ func parsePackage(data string) (int, time.Duration, error) {
 		return 0, 0, err
 	}
 	if steps <= 0 {
-		return 0, 0, fmt.Errorf("Количество шагов должно быть больше нуля")
+		return 0, 0, fmt.Errorf("step count must be greater than zero")
 	}
 
 	duration, err := time.ParseDuration(dataSlice[1])
@@ -42,10 +39,10 @@ func parsePackage(data string) (int, time.Duration, error) {
 func DayActionInfo(data string, weight, height float64) string {
 	steps, duration, err := parsePackage(data)
 	if err != nil {
-		return ""
+		return fmt.Sprintf("failed to parse package: %v", err)
 	}
 
-	distance := float64(steps) * StepLength / 1000.0
+	distance := float64(steps) * spentcalories.LenStep / spentcalories.MInKm
 	calories := spentcalories.WalkingSpentCalories(steps, weight, height, duration)
 
 	return fmt.Sprintf("Количество шагов: %d\nДистанция составила: %.2f км.\nВы сожгли: %.2f ккал.", steps, distance, calories)
